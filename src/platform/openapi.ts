@@ -15,5 +15,8 @@ export function setupOpenApi(app: INestApplication): void {
   app.getHttpAdapter().get('/openapi.json', (_request: unknown, response: { json: (body: unknown) => void }) => {
     response.json(document);
   });
+  app.getHttpAdapter().get('/', (_request: unknown, response: { redirect: (url: string) => void }) => {
+    response.redirect('/docs'); // the preview of a bare API opens on its documentation
+  });
   app.use('/docs', apiReference({ content: document }));
 }
