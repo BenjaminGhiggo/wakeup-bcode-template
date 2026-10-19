@@ -1,15 +1,6 @@
 import { fileURLToPath } from 'node:url';
-import type { PgDatabase, PgQueryResultHKT } from 'drizzle-orm/pg-core';
+import type { DatabaseHandle } from './database.types.js';
 import { runSeeders } from './seed.js';
-
-export type AppDatabase = PgDatabase<PgQueryResultHKT>;
-export type DatabaseMode = 'postgres' | 'http' | 'pglite';
-
-export interface DatabaseHandle {
-  db: AppDatabase;
-  mode: DatabaseMode;
-  close: () => Promise<void>;
-}
 
 export const MIGRATIONS_DIR = fileURLToPath(new URL('../../drizzle', import.meta.url));
 

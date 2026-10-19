@@ -1,16 +1,8 @@
-import { Global, Inject, Module, type OnApplicationShutdown } from '@nestjs/common';
-import { createDatabase, type DatabaseHandle } from './database.provider.js';
-
-export const DATABASE_HANDLE = 'DATABASE_HANDLE';
-export const DATABASE = 'DATABASE';
-
-class DatabaseLifecycle implements OnApplicationShutdown {
-  constructor(@Inject(DATABASE_HANDLE) private readonly handle: DatabaseHandle) {}
-
-  onApplicationShutdown(): Promise<void> {
-    return this.handle.close();
-  }
-}
+import { Global, Module } from '@nestjs/common';
+import { DatabaseLifecycle } from './database-lifecycle.js';
+import { createDatabase } from './database.provider.js';
+import { DATABASE, DATABASE_HANDLE } from './database.tokens.js';
+import type { DatabaseHandle } from './database.types.js';
 
 @Global()
 @Module({

@@ -1,4 +1,4 @@
-import type { AppDatabase } from './database.provider.js';
+import type { AppDatabase } from './database.types.js';
 
 export type Seeder = (db: AppDatabase) => Promise<void>;
 

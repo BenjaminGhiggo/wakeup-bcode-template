@@ -43,7 +43,20 @@ Rules the wake-up gate G1 (dependency-cruiser) enforces:
 - `presentation/` never imports `infrastructure/`; it receives use cases through Nest DI.
 - Contexts never import each other.
 
-`src/contexts/salud/` is a tiny example of every layer (a health use case backed by a database probe). Delete or replace it when you build real contexts; keep `src/platform/salud.module.ts` as the model for wiring.
+The template ships no business context on purpose (only the platform: database, health, OpenAPI). Add a context as `src/contexts/<ctx>/...` and wire it in `src/platform/<ctx>.module.ts`, the only place where ports meet adapters, so domain and application stay free of Nest:
+
+```ts
+@Module({
+  controllers: [ProductoController],
+  providers: [
+    { provide: ProductoRepository, useFactory: (db: AppDatabase) => new ProductoDrizzleRepository(db), inject: [DATABASE] },
+    { provide: CrearProducto, useFactory: (repo: ProductoRepository) => new CrearProducto(repo), inject: [ProductoRepository] },
+  ],
+})
+export class InventarioModule {}
+```
+
+Then register the module in `src/platform/app.module.ts`.
 
 The project is ESM (`"type": "module"`, `module: nodenext`): relative imports end in `.js`.
 
